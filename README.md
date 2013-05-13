@@ -5,6 +5,7 @@ Introduction
 ------------
 C++ openFrameworks addon for interfacing with the Etherdream DAC. Requires ofxIlda.
 Originally written by Daito Manabe + Yusuke Tomoto, mods (to add ofxIlda support) by Memo Akten
+[http://ether-dream.com/](http://ether-dream.com/)
 
 Licence
 -------
