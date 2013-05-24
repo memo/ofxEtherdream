@@ -101,11 +101,27 @@ void ofxEtherdream::send(bool bWaitForReady) {
 }
 
 //--------------------------------------------------------------
-void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {
+void ofxEtherdream::addPoints(const vector<ofxIlda::Point>& _points) {
     if(lock()) {
         if(!_points.empty()) {
             points.insert(points.end(), _points.begin(), _points.end());
         }
+        unlock();
+    }
+}
+
+
+//--------------------------------------------------------------
+void ofxEtherdream::addPoints(const ofxIlda::Frame &ildaFrame) {
+    addPoints(ildaFrame.getPoints());
+}
+
+
+//--------------------------------------------------------------
+void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {
+    if(lock()) {
+//            points.insert(points.end(), _points.begin(), _points.end());
+        points = _points;
         unlock();
     }
 }

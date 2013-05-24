@@ -29,6 +29,9 @@ public:
     void clear();
     void start();
     void stop();
+
+    void addPoints(const vector<ofxIlda::Point>& _points);
+    void addPoints(const ofxIlda::Frame &ildaFrame);
     
     void setPoints(const vector<ofxIlda::Point>& _points);
     void setPoints(const ofxIlda::Frame &ildaFrame);
