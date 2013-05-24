@@ -17,11 +17,13 @@ public:
     ofxEtherdream():state(ETHERDREAM_NOTFOUND) {}
     
     ~ofxEtherdream() {
-        if(state == ETHERDREAM_FOUND) {
+        if(stateIsFound()) {
             etherdream_stop(device);
             etherdream_disconnect(device);
         }
     }
+    
+    bool stateIsFound();
     
     void setup(bool bStartThread = true);
     virtual void threadedFunction();

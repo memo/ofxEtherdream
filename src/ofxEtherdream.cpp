@@ -15,6 +15,12 @@ void ofxEtherdream::setup(bool bStartThread) {
     if(bStartThread) start();
 }
 
+
+//--------------------------------------------------------------
+bool ofxEtherdream::stateIsFound() {
+    return state == ETHERDREAM_FOUND;
+}
+
 //--------------------------------------------------------------
 void ofxEtherdream::init() {
     int device_num = etherdream_dac_count();
@@ -68,7 +74,7 @@ void ofxEtherdream::stop() {
 
 //--------------------------------------------------------------
 void ofxEtherdream::send() {
-    if(points.empty()) return;
+    if(!stateIsFound() || points.empty()) return;
     
     if(bWaitBeforeSend) etherdream_wait_for_ready(device);
     else if(!etherdream_is_ready(device)) return;
