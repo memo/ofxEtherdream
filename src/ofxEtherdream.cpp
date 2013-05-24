@@ -5,6 +5,7 @@ void ofxEtherdream::setup(bool bStartThread) {
     etherdream_lib_start();
     
     setPPS(30000);
+    setWaitBeforeSend(false);
     
 	/* Sleep for a bit over a second, to ensure that we see broadcasts
 	 * from all available DACs. */
@@ -36,21 +37,6 @@ void ofxEtherdream::init() {
     state = ETHERDREAM_FOUND;
 }
 
-
-//--------------------------------------------------------------
-void ofxEtherdream::setPPS(int i) {
-    if(lock()) {
-        pps = i;
-        unlock();
-    }
-}
-
-
-//--------------------------------------------------------------
-int ofxEtherdream::getPPS() {
-    return pps;
-}
-
 //--------------------------------------------------------------
 void ofxEtherdream::threadedFunction() {
     while (isThreadRunning() != 0) {
@@ -71,11 +57,6 @@ void ofxEtherdream::threadedFunction() {
 }
 
 //--------------------------------------------------------------
-void ofxEtherdream::clear() {
-    points.clear();
-}
-
-//--------------------------------------------------------------
 void ofxEtherdream::start() {
     startThread(true, false);  // TODO: blocking or nonblocking?
 }
@@ -86,18 +67,27 @@ void ofxEtherdream::stop() {
 }
 
 //--------------------------------------------------------------
-void ofxEtherdream::send(bool bWaitForReady) {
+void ofxEtherdream::send() {
     if(points.empty()) return;
     
-    if(bWaitForReady) etherdream_wait_for_ready(device);
+    if(bWaitBeforeSend) etherdream_wait_for_ready(device);
     else if(!etherdream_is_ready(device)) return;
-
+    
     // DODGY HACK: casting ofxIlda::Point* to etherdream_point*
     int res = etherdream_write(device, (etherdream_point*)points.data(), points.size(), pps, 1);
     if (res != 0) {
         ofLogVerbose() << "ofxEtherdream::write " << res;
     }
-    clear();
+    points.clear();
+}
+
+
+//--------------------------------------------------------------
+void ofxEtherdream::clear() {
+    if(lock()) {
+        points.clear();
+        unlock();
+    }
 }
 
 //--------------------------------------------------------------
@@ -120,7 +110,6 @@ void ofxEtherdream::addPoints(const ofxIlda::Frame &ildaFrame) {
 //--------------------------------------------------------------
 void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {
     if(lock()) {
-//            points.insert(points.end(), _points.begin(), _points.end());
         points = _points;
         unlock();
     }
@@ -132,4 +121,29 @@ void ofxEtherdream::setPoints(const ofxIlda::Frame &ildaFrame) {
     setPoints(ildaFrame.getPoints());
 }
 
+//--------------------------------------------------------------
+void ofxEtherdream::setWaitBeforeSend(bool b) {
+    if(lock()) {
+        bWaitBeforeSend = b;
+        unlock();
+    }
+}
 
+//--------------------------------------------------------------
+bool ofxEtherdream::getWaitBeforeSend() const {
+    return bWaitBeforeSend;
+}
+
+
+//--------------------------------------------------------------
+void ofxEtherdream::setPPS(int i) {
+    if(lock()) {
+        pps = i;
+        unlock();
+    }
+}
+
+//--------------------------------------------------------------
+int ofxEtherdream::getPPS() const {
+    return pps;
+}

@@ -36,10 +36,13 @@ public:
     void setPoints(const vector<ofxIlda::Point>& _points);
     void setPoints(const ofxIlda::Frame &ildaFrame);
     
-    void send(bool bWaitForReady = true);
+    void send();
     
     void setPPS(int i);
-    int getPPS();
+    int getPPS() const;
+    
+    void setWaitBeforeSend(bool b);
+    bool getWaitBeforeSend() const;
     
 private:
     void init();
@@ -51,6 +54,7 @@ private:
     } state;
     
     int pps;
+    bool bWaitBeforeSend;
     
     struct etherdream *device;
     vector<ofxIlda::Point> points;
