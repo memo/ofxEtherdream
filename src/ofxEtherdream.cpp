@@ -1,7 +1,7 @@
 #include "ofxEtherdream.h"
 
 //--------------------------------------------------------------
-void ofxEtherdream::setup() {
+void ofxEtherdream::setup(bool bStartThread) {
     etherdream_lib_start();
     
     setPPS(30000);
@@ -10,7 +10,8 @@ void ofxEtherdream::setup() {
 	 * from all available DACs. */
 	usleep(1200000);
     init();
-    start();
+    
+    if(bStartThread) start();
 }
 
 //--------------------------------------------------------------
@@ -60,16 +61,8 @@ void ofxEtherdream::threadedFunction() {
                 break;
                 
             case ETHERDREAM_FOUND:
-                if( lock() ){
-                    if (!points.empty()) {
-                        // DODGY HACK: casting ofxIlda::Point* to etherdream_point*
-                        int res = etherdream_write(device, (etherdream_point*)points.data(), points.size(), pps, 1);
-                        if (res != 0) {
-                            ofLogNotice() << "ofxEtherdream::write " << res;
-                        }
-                        etherdream_wait_for_ready(device);
-                        clear();
-                    }
+                if(lock()) {
+                    send();
                     unlock();
                 }
                 break;
@@ -92,6 +85,20 @@ void ofxEtherdream::stop() {
     stopThread();
 }
 
+//--------------------------------------------------------------
+void ofxEtherdream::send(bool bWaitForReady) {
+    if(points.empty()) return;
+    
+    if(bWaitForReady) etherdream_wait_for_ready(device);
+    else if(!etherdream_is_ready(device)) return;
+
+    // DODGY HACK: casting ofxIlda::Point* to etherdream_point*
+    int res = etherdream_write(device, (etherdream_point*)points.data(), points.size(), pps, 1);
+    if (res != 0) {
+        ofLogVerbose() << "ofxEtherdream::write " << res;
+    }
+    clear();
+}
 
 //--------------------------------------------------------------
 void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {

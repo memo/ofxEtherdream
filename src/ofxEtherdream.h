@@ -23,7 +23,7 @@ public:
         }
     }
     
-    void setup();
+    void setup(bool bStartThread = true);
     virtual void threadedFunction();
     
     void clear();
@@ -32,6 +32,8 @@ public:
     
     void setPoints(const vector<ofxIlda::Point>& _points);
     void setPoints(const ofxIlda::Frame &ildaFrame);
+    
+    void send(bool bWaitForReady = true);
     
     void setPPS(int i);
     int getPPS();
