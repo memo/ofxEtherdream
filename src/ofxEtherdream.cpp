@@ -9,7 +9,7 @@ void ofxEtherdream::setup(bool bStartThread) {
     
 	/* Sleep for a bit over a second, to ensure that we see broadcasts
 	 * from all available DACs. */
-	usleep(1200000);
+	usleep(100000);
     init();
     
     if(bStartThread) start();
@@ -49,7 +49,7 @@ void ofxEtherdream::threadedFunction() {
         
         switch (state) {
             case ETHERDREAM_NOTFOUND:
-                //                init();
+                init();
                 break;
                 
             case ETHERDREAM_FOUND:
@@ -115,6 +115,12 @@ void ofxEtherdream::addPoints(const ofxIlda::Frame &ildaFrame) {
 
 //--------------------------------------------------------------
 void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {
+    if(device->state == ST_SHUTDOWN) {
+        kill();
+        setup();
+        return;
+    }
+    
     if(lock()) {
         points = _points;
         unlock();
