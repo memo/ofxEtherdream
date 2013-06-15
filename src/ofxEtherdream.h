@@ -34,6 +34,10 @@ public:
     void setup(bool bStartThread = true);
     virtual void threadedFunction();
     
+    
+    // check if the device has shutdown (weird bug in etherdream driver) and reconnect if nessecary
+    bool checkConnection(bool bForceReconnect = true);
+    
     void clear();
     void start();
     void stop();

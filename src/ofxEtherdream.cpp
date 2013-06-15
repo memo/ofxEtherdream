@@ -22,6 +22,18 @@ bool ofxEtherdream::stateIsFound() {
 }
 
 //--------------------------------------------------------------
+bool ofxEtherdream::checkConnection(bool bForceReconnect) {
+    if(device->state == ST_SHUTDOWN) {
+        if(bForceReconnect) {
+            kill();
+            setup();
+        }
+        return false;
+    }
+    return true;
+}
+
+//--------------------------------------------------------------
 void ofxEtherdream::init() {
     int device_num = etherdream_dac_count();
 	if (!device_num) {
@@ -115,12 +127,6 @@ void ofxEtherdream::addPoints(const ofxIlda::Frame &ildaFrame) {
 
 //--------------------------------------------------------------
 void ofxEtherdream::setPoints(const vector<ofxIlda::Point>& _points) {
-    if(device->state == ST_SHUTDOWN) {
-        kill();
-        setup();
-        return;
-    }
-    
     if(lock()) {
         points = _points;
         unlock();
