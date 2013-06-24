@@ -61,7 +61,7 @@ void ofxEtherdream::threadedFunction() {
         
         switch (state) {
             case ETHERDREAM_NOTFOUND:
-                init();
+                if(bAutoConnect) init();
                 break;
                 
             case ETHERDREAM_FOUND:

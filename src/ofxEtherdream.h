@@ -14,7 +14,7 @@
 
 class ofxEtherdream : public ofThread {
 public:
-    ofxEtherdream():state(ETHERDREAM_NOTFOUND) {}
+    ofxEtherdream():state(ETHERDREAM_NOTFOUND), bAutoConnect(false) {}
     
     ~ofxEtherdream() {
         kill();
@@ -67,6 +67,7 @@ private:
     
     int pps;
     bool bWaitBeforeSend;
+    bool bAutoConnect;
     
     struct etherdream *device;
     vector<ofxIlda::Point> points;
