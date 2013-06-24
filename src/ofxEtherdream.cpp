@@ -9,7 +9,7 @@ void ofxEtherdream::setup(bool bStartThread) {
     
 	/* Sleep for a bit over a second, to ensure that we see broadcasts
 	 * from all available DACs. */
-	usleep(100000);
+	usleep(1000000);
     init();
     
     if(bStartThread) start();
