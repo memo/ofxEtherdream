@@ -31,7 +31,7 @@ public:
         }
     }
     
-    void setup(bool bStartThread = true);
+    void setup(bool bStartThread = true, int idEtherdream = 0);
     virtual void threadedFunction();
     
     
@@ -71,4 +71,6 @@ private:
     
     struct etherdream *device;
     vector<ofxIlda::Point> points;
+    
+    int idEtherdreamConnection;
 };
