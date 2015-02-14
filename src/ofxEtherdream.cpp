@@ -31,7 +31,7 @@ bool ofxEtherdream::checkConnection(bool bForceReconnect) {
         
         if(bForceReconnect) {
             kill();
-            setup();
+            setup(true, idEtherdreamConnection);
         }
         
         return false;
