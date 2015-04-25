@@ -13,7 +13,7 @@ Originally written by Daito Manabe + Yusuke Tomoto, mods (to add ofxIlda support
 Licence
 -------
 The code in this repository is available under the [MIT License](https://secure.wikimedia.org/wikipedia/en/wiki/Mit_license).  
-Copyright (c) 2008-2013 Daito Manabe + Yusuke Tomoto (Rhizomatiks)
+Copyright (c) 2008-2015 Daito Manabe + Yusuke Tomoto (Rhizomatiks)
 and Memo Akten, [www.memo.tv](http://www.memo.tv)
 
 
