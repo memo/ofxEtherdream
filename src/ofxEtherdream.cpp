@@ -1,7 +1,10 @@
 #include "ofxEtherdream.h"
 
 //--------------------------------------------------------------
-void ofxEtherdream::setup(bool bStartThread) {
+void ofxEtherdream::setup(bool bStartThread, int idEtherdream) {
+
+    idEtherdreamConnection = idEtherdream;
+    
     etherdream_lib_start();
     
     setPPS(30000);
@@ -10,6 +13,7 @@ void ofxEtherdream::setup(bool bStartThread) {
 	/* Sleep for a bit over a second, to ensure that we see broadcasts
 	 * from all available DACs. */
 	usleep(1000000);
+    
     init();
     
     if(bStartThread) start();
@@ -23,11 +27,13 @@ bool ofxEtherdream::stateIsFound() {
 
 //--------------------------------------------------------------
 bool ofxEtherdream::checkConnection(bool bForceReconnect) {
-    if(device->state == ST_SHUTDOWN) {
+    if(device->state == ST_SHUTDOWN || device->state == ST_BROKEN || device->state == ST_DISCONNECTED) {
+        
         if(bForceReconnect) {
             kill();
-            setup();
+            setup(true, idEtherdreamConnection);
         }
+        
         return false;
     }
     return true;
@@ -36,20 +42,20 @@ bool ofxEtherdream::checkConnection(bool bForceReconnect) {
 //--------------------------------------------------------------
 void ofxEtherdream::init() {
     int device_num = etherdream_dac_count();
-	if (!device_num) {
+	if (!device_num || idEtherdreamConnection>device_num) {
 		ofLogWarning() << "ofxEtherdream::init - No DACs found";
 		return 0;
 	}
     
 	for (int i=0; i<device_num; i++) {
 		ofLogNotice() << "ofxEtherdream::init - " << i << " Ether Dream " << etherdream_get_id(etherdream_get(i));
-	}
+    }
     
-	device = etherdream_get(0);
+    device = etherdream_get(idEtherdreamConnection);
     
-	ofLogNotice() << "ofxEtherdream::init - Connecting...";
-	if (etherdream_connect(device) < 0) return 1;
-    
+    ofLogNotice() << "ofxEtherdream::init - Connecting...";
+    if (etherdream_connect(device) < 0) return 1;
+
     ofLogNotice() << "ofxEtherdream::init - done";
     
     state = ETHERDREAM_FOUND;
