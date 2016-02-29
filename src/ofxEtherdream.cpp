@@ -80,6 +80,7 @@ void ofxEtherdream::threadedFunction() {
                 }
                 break;
         }
+        ofSleepMillis(1);
     }
 }
 
