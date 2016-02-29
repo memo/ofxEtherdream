@@ -6,7 +6,7 @@
 //  Mods by Memo Akten
 //
 //
-
+#pragma once
 
 #include "ofMain.h"
 #include "etherdream.h"
