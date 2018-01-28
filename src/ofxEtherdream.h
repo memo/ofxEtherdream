@@ -57,7 +57,7 @@ public:
     bool getWaitBeforeSend() const;
     
 private:
-    void init();
+    int init();
     
 private:
     enum {
