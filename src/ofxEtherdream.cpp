@@ -82,7 +82,7 @@ void ofxEtherdream::threadedFunction() {
 
 //--------------------------------------------------------------
 void ofxEtherdream::start() {
-    startThread(true, false);  // TODO: blocking or nonblocking?
+    startThread();  // TODO: blocking or nonblocking?
 }
 
 //--------------------------------------------------------------
