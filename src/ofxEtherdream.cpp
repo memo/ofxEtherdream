@@ -42,21 +42,24 @@ bool ofxEtherdream::checkConnection(bool bForceReconnect) {
 //--------------------------------------------------------------
 void ofxEtherdream::init() {
     int device_num = etherdream_dac_count();
-	if (!device_num || idEtherdreamConnection>device_num) {
+	if (!device_num || idEtherdreamConnection>=device_num) {
 		ofLogWarning() << "ofxEtherdream::init - No DACs found";
 		return 0;
 	}
     
+    vector<unsigned long> dac_ids;
 	for (int i=0; i<device_num; i++) {
 		ofLogNotice() << "ofxEtherdream::init - " << i << " Ether Dream " << etherdream_get_id(etherdream_get(i));
+        dac_ids.push_back(etherdream_get_id(etherdream_get(i)));
     }
+    std::sort(dac_ids.begin(),dac_ids.end());
     
-    device = etherdream_get(idEtherdreamConnection);
+    device = etherdream_get(dac_ids[idEtherdreamConnection]);
     
     ofLogNotice() << "ofxEtherdream::init - Connecting...";
     if (etherdream_connect(device) < 0) return 1;
 
-    ofLogNotice() << "ofxEtherdream::init - done";
+    ofLogNotice() << "ofxEtherdream::init - done with dac id : " << dac_ids[idEtherdreamConnection];
     
     state = ETHERDREAM_FOUND;
 }
@@ -77,6 +80,7 @@ void ofxEtherdream::threadedFunction() {
                 }
                 break;
         }
+        ofSleepMillis(1);
     }
 }
 
