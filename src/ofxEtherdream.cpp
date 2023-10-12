@@ -40,7 +40,7 @@ bool ofxEtherdream::checkConnection(bool bForceReconnect) {
 }
 
 //--------------------------------------------------------------
-void ofxEtherdream::init() {
+int ofxEtherdream::init() {
     int device_num = etherdream_dac_count();
 	if (!device_num || idEtherdreamConnection>device_num) {
 		ofLogWarning() << "ofxEtherdream::init - No DACs found";
